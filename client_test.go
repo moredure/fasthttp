@@ -2323,7 +2323,7 @@ func TestClientTLSHandshakeTimeout(t *testing.T) {
 
 	client := Client{
 		WriteTimeout: 1 * time.Second,
-		ReadTimeout:  1 * time.Second,
+		HandshakeTimeout:  1 * time.Second,
 	}
 
 	_, _, err = client.Get(nil, "https://"+addr)
@@ -2331,7 +2331,7 @@ func TestClientTLSHandshakeTimeout(t *testing.T) {
 		t.Fatal("tlsClientHandshake completed successfully")
 	}
 
-	if err != ErrTLSHandshakeTimeout {
+	if !err.(net.Error).Timeout() {
 		t.Errorf("resulting error not a timeout: %v\nType %T: %#v", err, err, err)
 	}
 }
